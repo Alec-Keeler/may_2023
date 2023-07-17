@@ -10,11 +10,11 @@ app.use(express.json());
  *     Route: /version
  *     Response (Text): "1.0.0"
  */
-// Your code here
-
+//!!START
 app.get('/version', (req, res) => {
-    res.send('1.0.0')
-})
+    res.send('1.0.0');
+});
+//!!END
 
 /**
  *  Basic Phase 2 - Route param and JSON response
@@ -32,32 +32,21 @@ app.get('/version', (req, res) => {
  *  Hint: Use your name, birth date and favorite movies (as strings in the code)
  *  combined with the id sent as a route parameter in the url
  */
-// Your code here
-// app.get('/viewers/:id', (req, res) => {
-//     res.json({
-//         id: req.params.id,
-//         firstName: 'Alec',
-//         lastName: 'Keeler',
-//         birthDate: '01/01/1901',
-//         favoriteMovies: [
-//             'A Knight\'s Tale',
-//             'The Prestige',
-//             'The Old Gaurd'
-//         ]
-//     })
-// })
-
+//!!START
 app.get('/viewers/:id', (req, res) => {
-    const { id } = req.params;
-    const user = {
-        id,
-        firstName: 'Jashan',
-        lastName: 'Singh',
-        birthDate: '08/15/2002',
-        favoriteMovies: ['Don', 'Mafia Boss', 'Carry']
-    };
-    res.json(user)
-})
+    res.json({
+        id: req.params.id,
+        firstName: 'Sam',
+        lastName: 'Foster',
+        birthDate: '12/01/2000',
+        favoriteMovies: [
+            'Chicken Run',
+            'Galaxy Quest',
+            'Miss Congeniality',
+        ]
+    });
+});
+//!!END
 
 /** Basic Phase 3 - Query params in URL
  *      Method: GET
@@ -76,15 +65,15 @@ app.get('/viewers/:id', (req, res) => {
  *          message required
  *          message required
  */
-// Your code here
+//!!START
 app.get('/info', (req, res) => {
-    const { message } = req.query
-
-    if (!message) {
-        return res.send('Message required')
-    } 
-    res.send(message)
-})
+    if (req.query.message) {
+        res.send(req.query.message);
+    } else {
+        res.send('message required');
+    }
+});
+//!!END
 
 /**
  *  IMPORTANT: Scroll to the top for basic phases.
@@ -118,7 +107,16 @@ app.get('/info', (req, res) => {
  *      Alternate response object:
  *          { "id": 98765432, "name": "Honey Sweet", "year": 1967, "isFavorite": false }
  */
-// Your code here
+//!!START
+app.post('/movies', (req, res) => {
+    res.json({
+        id: Math.floor(Math.random()*10000000),
+        name: String(req.body.name),
+        year: parseInt(req.body.year),
+        isFavorite: Boolean(req.body.favorite),
+    });
+});
+//!!END
 
 /**
  *  Advanced Bonus Phase B - Research how to return static
@@ -135,7 +133,9 @@ app.get('/info', (req, res) => {
  *
  *      Test route: /logo.png
  */
-// Your code here
+//!!START
+app.use(express.static('public'));
+//!!END
 
 // DO NOT EDIT - Set port and listener
 if (require.main === module) {
