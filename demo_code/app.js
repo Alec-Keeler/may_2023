@@ -1,10 +1,21 @@
 const express = require('express')
 const app = express()
+require('dotenv').config()
+
+const catsRouter = require('./routes/cats')
 
 app.use(express.json())
 
+// app.use(express.static('assets'))
+// app.use(express.static('assets/css'))
+app.use('/styling', express.static('assets/css'))
+app.use('/otherStatic', express.static('assets/scripts'))
+
+app.use('/cats', catsRouter)
+
 app.use('/test', (req, res, next) => {
 	console.log(`path: ${req.path}`)
+	console.log(process.env.MESSAGE)
 	next()
 })
 
@@ -26,7 +37,10 @@ const test = (req, res, next) => {
 
 const checkUserInput = (req, res, next) => {
 	if (!req.body.stuff) {
-		return res.send('please include a stuff property')
+		// return res.send('please include a stuff property')
+		const err = new Error('please include a stuff property')
+		err.statusCode = 400
+		return next(err)
 	}
 	console.log('check user input')
 	next()
@@ -57,9 +71,20 @@ app.get('/search', (req, res) => {
 	res.send('search filters')
 })
 
+app.use((req, res, next) => {
+	const err = new Error('Resource not found')
+	err.statusCode = 404
+	next(err)
+})
+
 app.use((err, req, res, next) => {
 	console.log(err)
-	res.send(err)
+	const status = err.statusCode || 500
+	res.status(status)
+	res.json({
+		message: err.message || 'Something went wrong',
+		status
+	})
 })
 
 app.listen(8000, () => console.log('Listening on port 8000...'))
