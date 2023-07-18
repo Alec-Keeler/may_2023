@@ -3,12 +3,20 @@ const app = express()
 
 app.use(express.json())
 
+app.use('/', (req, res, next) => {
+	console.log(`path: ${req.path}`)
+	next()
+})
+
 app.get('/test', (request, response) => {
 	response.send('Hello from your first express API')
 })
 
 app.post('/create', (req, res) => {
 	console.log(req.body)
+	res.json({
+		bodyContent: req.body
+	})
 })
 
 app.get('/request', (req, res) => {
