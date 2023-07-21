@@ -1,0 +1,18 @@
+html 
+	nav 
+		a(href="/") Home
+		a(href="/albums") Albums
+		a(href="/albums/create-album") Add New Album
+	body
+		form(action="/albums" method="post") 
+			label(for="title") Title:
+			input(type="text" name='title')
+			label(for="release_year") Release Year:
+			input(type="number" name='release_year')
+			label(for="length") Album Length:
+			input(type="number" name='length')
+			label(for="group_id") Group:
+			select(name="group_id") 
+				each group in groups
+					option(value=group.id)= group.name
+			button Create

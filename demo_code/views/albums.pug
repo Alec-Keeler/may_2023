@@ -1,0 +1,14 @@
+html
+	link(rel="stylesheet", href="index.css")
+	nav 
+		a(href="/") Home
+		a(href="/albums") Albums
+		a(href="/albums/create-album") Add New Album	
+		body
+			each album in albums
+				h2= album.title
+				//- p Group Name
+				//- 	h3
+				//- 		a(href="/groups/id")=album.name
+				p= album.release_year
+				p= album.length

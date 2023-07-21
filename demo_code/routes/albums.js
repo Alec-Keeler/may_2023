@@ -7,13 +7,20 @@ const db = new sqlite3.Database(process.env.DB_FILE, sqlite3.OPEN_READWRITE)
 // /albums
 router.get('/', (req, res) => {
 
-	const sql = 'SELECT * FROM albums;'
+	const sql = 'SELECT * FROM albums JOIN groups ON (albums.group_id = groups.id);'
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			return res.json(err)
 		}
-		res.json(rows)
+		console.log(rows)
+		res.render('albums', {albums: rows})
+	})
+})
+
+router.get('/create-album', (req, res) => {
+	db.all('SELECT * FROM groups', [], (err, rows) => {
+		res.render('create_album', {groups: rows})
 	})
 })
 
@@ -30,11 +37,13 @@ router.get('/:id', (req, res) => {
 	})
 })
 
-router.post('/', (req, res) => {
-	const { title, release_year, artist_name, length, num_songs } = req.body
-	const sql = `INSERT INTO albums (title, release_year, artist_name, length, num_songs) VALUES (?, ?, ?, ?, ?);`
-	const params = [title, release_year, artist_name, length, num_songs]
 
+
+router.post('/', (req, res) => {
+	const { title, release_year, length, group_id} = req.body
+	const sql = `INSERT INTO albums (title, release_year, length, group_id) VALUES (?, ?, ?, ?);`
+	const params = [title, release_year, length, group_id]
+	console.log(req.body)
 	db.run(sql, params, (err) => {
 		if (err) {
 			res.json(err)
@@ -44,7 +53,7 @@ router.post('/', (req, res) => {
 			if (err) {
 				res.json(err)
 			}
-			res.json(rows)
+			res.redirect('/albums')
 		})
 	})
 })
