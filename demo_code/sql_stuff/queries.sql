@@ -85,3 +85,38 @@ WHERE groups.id = 1;
 -- JOIN groups
 -- JOIN song_genres
 -- JOIN genres
+
+
+SELECT AVG(length), title
+FROM albums;
+
+SELECT AVG(length)
+FROM albums
+WHERE group_id = 3;
+
+SELECT AVG(length), title
+FROM albums
+GROUP BY group_id
+HAVING AVG(length) > 60;
+
+-- SELECT
+-- FROM
+-- JOIN ON
+-- WHERE
+-- GROUP BY
+-- HAVING
+-- ORDER BY
+-- LIMIT
+-- OFFSET
+
+SELECT songs.title, songs.album_id, albums.id, albums.title FROM albums
+JOIN songs ON (songs.album_id = albums.id);
+
+SELECT id FROM albums
+WHERE title = 'Geography';
+
+SELECT * FROM songs
+WHERE album_id = (
+	SELECT id FROM albums
+	WHERE length > 50
+);
