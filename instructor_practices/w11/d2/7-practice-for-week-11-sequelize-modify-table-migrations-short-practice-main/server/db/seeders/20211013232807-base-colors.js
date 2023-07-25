@@ -19,7 +19,7 @@ module.exports = {
         { name: 'yellow' },
       ], { validate: true });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       throw err;
     }
 

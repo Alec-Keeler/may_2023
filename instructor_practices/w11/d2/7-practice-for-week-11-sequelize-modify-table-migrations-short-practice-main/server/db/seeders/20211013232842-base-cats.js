@@ -20,7 +20,7 @@ module.exports = {
         { name: 'Princess', weight: 8 },
       ], { validate: true });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       throw err;
     }
   },

@@ -19,7 +19,7 @@ module.exports = {
         {name: 'The Resistance', numPlayers: 10, estPlayTime: 30}
       ], { validate: true });
     } catch (err) {
-      console.err(err);
+      console.error(err);
       throw err;
     }
   },

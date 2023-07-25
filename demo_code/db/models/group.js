@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Color extends Model {
+  class Group extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,27 +12,34 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  Color.init({
+  }
+  Group.init({
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(250),
       allowNull: false,
       unique: true,
       validate: {
         len: {
-          args: [2, 20],
-          msg: 'name must be between 2 and 20 characters'
-        },
-        noEndingInY(value) {
-          if(value.slice(-1) === 'y') {
-            throw new Error('name must not end in \'y\'');
-          }
+          args: [3, 250],
+          msg: 'Your group name must be between 3 and 250 chars'
         }
       }
+    },
+    numFollowers: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        min: 1000,
+        max: 100000000
+      }
+    },
+    yearEstablished: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     }
   }, {
     sequelize,
-    modelName: 'Color',
+    modelName: 'Group',
   });
-  return Color;
+  return Group;
 };
