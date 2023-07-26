@@ -21,12 +21,58 @@ app.get('/puppies', async (req, res, next) => {
 // STEP 1: Update a puppy by id
 app.put('/puppies/:puppyId', async (req, res, next) => {
     // Your code here
+    const pup = await Puppy.findByPk(req.params.puppyId)
+    const {ageYrs, weightLbs, microchipped} = req.body
+
+    if (!pup) {
+        res.status(404)
+        return res.json({
+            statusCode: 404,
+            message: `The puppy with an id of ${req.params.puppyId} could not be found`
+        })
+    }
+
+    // console.log(pup)
+    if (ageYrs) {
+        pup.ageYrs = ageYrs
+    }
+    if (weightLbs) {
+        pup.weightLbs = weightLbs
+    }
+    if (microchipped !== undefined) {
+        pup.microchipped = microchipped
+    }
+    await pup.save()
+
+    res.json({
+        message: 'Successfully updated the puppy',
+        puppy: pup
+    })
 })
 
 
 // STEP 2: Delete a puppy by id
+// app.delete('/puppies/:puppyId', async (req, res, next) => {
+//     // Your code here
+//     const pup = await Puppy.findByPk(req.params.puppyId)
+
+//     await pup.destroy()
+
+//     res.json({
+//         message: 'Successfully deleted the puppy',
+//         puppy: pup
+//     })
+// })
+
 app.delete('/puppies/:puppyId', async (req, res, next) => {
     // Your code here
+    const id = req.params.puppyId
+    const dog1 = await Puppy.findByPk(id)
+    await dog1.destroy();
+    res.json({
+        message: "pupp was successfully deleted",
+        puppy: dog1
+    })
 })
 
 

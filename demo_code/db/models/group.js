@@ -11,6 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Group.hasMany(models.Album, {
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+        hooks: true
+      })
+      // SELECT * FROM Groups
+      // JOIN Albums ON (Groups.id = Albums.groupId)
     }
   }
   Group.init({
@@ -33,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
         max: 100000000
       }
     },
-    yearEstablished: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    }
+    // yearEstablished: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    // }
   }, {
     sequelize,
     modelName: 'Group',
