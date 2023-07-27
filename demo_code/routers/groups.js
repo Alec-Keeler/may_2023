@@ -125,4 +125,66 @@ router.get('/join', async(req, res) => {
 	res.json(albums)
 })
 
+router.get('/associations', async(req, res) => {
+	const song = await Song.findByPk(1, {
+		// include: Album
+	})
+
+	const album = await song.getAlbum()
+
+	const newSong = await album.createSong({
+		title: 'Test',
+		length: 5.5,
+		songOrder: 10,
+		single: false
+	})
+
+	const genre = await Genre.findByPk(1)
+
+	await genre.addSong([song.id, newSong.id])
+
+	res.json(newSong)
+})
+
+router.get('/agg', async(req, res) => {
+	const groupWithFewestFollowers = await Group.min('numFollowers', {
+		where: {
+			name: {
+				[Op.startsWith]: 'S'
+			}
+		}
+	})
+
+	const groupWithMostFollowers = await Group.max('numFollowers')
+
+	// const numGroups = await Group.count()
+	const allGroups = await Group.findAll()
+	const numGroups = allGroups.length
+	console.log(numGroups)
+
+	const numFollowersSum = await Group.sum('numFollowers', {
+		where: {
+			name: {
+				[Op.startsWith]: 'S'
+			}
+		}
+	})
+
+	const numFollowersAvg = numFollowersSum / numGroups
+
+	const aGroup = await Group.findOne()
+
+	const groupObj = aGroup.toJSON()
+
+	groupObj.numGroups = numGroups
+	groupObj.groupWithFewestFollowers = groupWithFewestFollowers
+	groupObj.groupWithMostFollowers = groupWithMostFollowers
+	groupObj.numFollowersSum = numFollowersSum
+	groupObj.numFollowersAvg = numFollowersAvg
+
+
+	res.json(groupObj)
+
+})
+
 module.exports = router
