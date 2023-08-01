@@ -12,11 +12,65 @@ const { Musician, Band, Instrument } = require('./db/models');
 // Express using json - DO NOT MODIFY
 app.use(express.json());
 
+const paginationHelper = (queryObj) => {
+    let { page, size } = queryObj
+    if (!page) page = 1
+    if (!size) size = 5
+
+    let pagination = {}
+    if (page >= 1 && size >= 1) {
+        pagination.limit = size
+        pagination.offset = size * (page - 1)
+    }
+    return pagination
+}
+
+const paginationMiddleware = (req, res, next) => {
+    let { page, size } = req.query
+    if (!page) page = 1
+    if (!size) size = 5
+
+    let pagination = {}
+    if (page >= 1 && size >= 1) {
+        pagination.limit = size
+        pagination.offset = size * (page - 1)
+    }
+    req.pagination = pagination
+    next()
+}
+
+const paginate = (req, res, next) => {
+    let { page, size } = req.query;
+
+    if (!page) page = 1;
+    if (!size) size = 5;
+
+    let pagination = {}
+    if (page >= 1 && size >= 1) {
+        pagination.limit = size
+        pagination.offset = size * (page - 1)
+    }
+
+    // const offset = (page - 1) * size;
+    req.pagination = pagination
+
+    next();
+}
 
 app.get('/musicians', async (req, res, next) => {
     // Parse the query params, set default values, and create appropriate
     // offset and limit values if necessary.
     // Your code here
+    // let {page, size} = req.query
+    // if (!page) page = 1
+    // if (!size) size = 5
+
+    // let pagination = {}
+    // if (page >= 1 && size >= 1) {
+    //     pagination.limit = size
+    //     pagination.offset = size * (page - 1)
+    // }
+    const pagination = paginationHelper(req.query)
     
     // Query for all musicians
     // Include attributes for `id`, `firstName`, and `lastName`
@@ -32,6 +86,7 @@ app.get('/musicians', async (req, res, next) => {
         // add limit key-value to query
         // add offset key-value to query
         // Your code here
+        ...pagination
     });
 
     res.json(musicians)
