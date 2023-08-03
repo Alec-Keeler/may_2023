@@ -1,4 +1,5 @@
 'use strict';
+const { Op } = require("sequelize");
 const {
   Model
 } = require('sequelize');
@@ -47,6 +48,38 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    },
+    scopes: {
+      minFollowers: {
+        where: {
+          numFollowers: {
+            [Op.gte]: 100000
+          }
+        },
+        order: [['numFollowers']]
+      },
+      getGroupsByGenre(genreName) {
+        const {Album, Song, Genre} = require('../models')
+        return {
+          include: {
+            model: Album,
+            include: {
+              model: Song,
+              include: {
+                model: Genre,
+                where: {
+                  name: genreName
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   });
   return Group;
 };

@@ -187,4 +187,27 @@ router.get('/agg', async(req, res) => {
 
 })
 
+router.get('/scopes', async(req, res) => {
+	const groups = await Group.scope(['defaultScope',
+	{
+		method: ['getGroupsByGenre', 'Pop']
+	}
+	]).findAll()
+
+	// const groups = await Group.findAll({
+	// 	include: {
+	// 		model: Album,
+	// 		include: {
+	// 			model: Song,
+	// 			include: {
+	// 				model: Genre,
+	// 				where: {
+	// 					name: 'Pop'
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// })
+	res.json(groups)
+})
 module.exports = router
